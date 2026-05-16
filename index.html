@@ -1,61 +1,329 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>About Me</title>
-    <link rel="shortcut icon" type="image/png" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giovanni | Personal Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0b13;
+            --sidebar-bg: #111119;
+            --accent: #ff4d61;
+            --accent-glow: rgba(255, 77, 97, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #a9adb8;
+            --card-bg: rgba(22, 22, 31, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.05);
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        /* Sidebar Customization */
+        nav {
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            z-index: 1000;
+        }
+
+        .profile-container { margin-bottom: 50px; text-align: center; }
+        .profile-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #222;
+            border: 5px solid var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+            margin-bottom: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            margin: 12px 0;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            width: 100%;
+            text-align: center;
+        }
+
+        nav a:hover, nav a.active { color: var(--accent); letter-spacing: 1px; }
+
+        /* Main Wrapper */
+        main { margin-left: 280px; padding: 0 8%; }
+        section { padding: 120px 0; min-height: 100vh; }
+
+        h2 { font-size: 3rem; font-weight: 700; margin-bottom: 50px; position: relative; }
+        h2::after { content: ''; width: 60px; height: 5px; background: var(--accent); position: absolute; bottom: -10px; left: 0; border-radius: 2px; }
+
+        .accent { color: var(--accent); }
+
+        /* Services Cards */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s ease;
+            text-align: left;
+        }
+
+        .service-card i { font-size: 2.5rem; margin-bottom: 20px; display: block; }
+        .service-card:hover { 
+            background: rgba(255, 77, 97, 0.05); 
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        /* Portfolio Filter System */
+        .filter-buttons { margin-bottom: 40px; }
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-right: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .filter-btn.active, .filter-btn:hover { color: var(--accent); }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .portfolio-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 250px;
+            background: #1a1a25;
+            cursor: pointer;
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 11, 19, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: 0.4s;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .portfolio-card:hover .portfolio-overlay { opacity: 1; }
+        .portfolio-card img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Experience Timeline */
+        .timeline { border-left: 2px solid var(--glass-border); padding-left: 30px; margin-left: 10px; }
+        .timeline-item { position: relative; margin-bottom: 40px; }
+        .timeline-item::before {
+            content: '';
+            width: 15px; height: 15px;
+            background: var(--accent);
+            position: absolute; left: -39px; top: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            nav { width: 100%; height: auto; position: fixed; bottom: 0; top: auto; flex-direction: row; padding: 15px; }
+            .profile-container { display: none; }
+            nav a { margin: 0; font-size: 0.9rem; }
+            main { margin-left: 0; padding: 0 5%; padding-bottom: 80px; }
+            h2 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
 <body>
-    <header id="masthead">
-    <div class="container">   
-<a href="index.html" id="logo">Gio Leonardo</a>
 
-<nav>
-    <a href="index.html">About Me</a>
-    <a href="portfolio.html">Portfolio</a>
-    <a href="contact.html">Contact</a>
-</nav>
-</div> 
-</header>
+    <nav>
+        <div class="profile-container">
+            <div class="profile-img"></div>
+            <h3>Giovanni</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Automation Expert</p>
+        </div>
+        <a href="#home" class="active">Home</a>
+        <a href="#services">Services</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+    </nav>
 
+    <main>
+        <section id="home" style="display: flex; align-items: center;">
+            <div>
+                <h1 style="font-size: 4.5rem; line-height: 1;">Creative <span class="accent">Automation.</span></h1>
+                <p style="font-size: 1.8rem; color: var(--text-muted); margin: 20px 0;">
+                    Building the future of <span class="accent">automation</span> and <span class="accent">product efficiency</span>.
+                </p>
+                <p>I design and build technical solutions that simplify the complex.</p>
+                <div style="margin-top: 30px;">
+                    <a href="#portfolio" style="background: var(--accent); color: white; padding: 15px 40px; border-radius: 30px; text-decoration: none; font-weight: 600; margin-right: 20px;">View Work</a>
+                    <a href="#contact" style="border: 2px solid var(--accent); color: var(--accent); padding: 13px 40px; border-radius: 30px; text-decoration: none; font-weight: 600;">Hire Me</a>
+                </div>
+            </div>
+        </section>
 
-<div id="main-container" class="container">
+        <section id="services">
+            <h2>Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-robot accent"></i>
+                    <h3>Workflow Automation</h3>
+                    <p>Streamlining business processes using Python, Google Apps Script, and custom low-code integrations.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-layer-group accent"></i>
+                    <h3>Product Management</h3>
+                    <p>Driving technical roadmaps from conception to deployment with a focus on procurement logistics.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-code accent"></i>
+                    <h3>Custom Apps</h3>
+                    <p>Developing bespoke KPI dashboards and internal logistics calculators for data-driven decisions.</p>
+                </div>
+            </div>
+        </section>
 
-<section class="main-container">
-    <h1>About Me</h1>
+        <section id="portfolio">
+            <h2>Portfolio</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterSelection('all')">All</button>
+                <button class="filter-btn" onclick="filterSelection('automation')">Automation</button>
+                <button class="filter-btn" onclick="filterSelection('web')">Web Apps</button>
+            </div>
 
-    <img src="https://picsum.photos/200/300/?random"
-    class="author-image" alt="randome profile">
+            <div class="portfolio-grid">
+                <div class="portfolio-card automation">
+                    <div class="portfolio-overlay">
+                        <h3>Logistics Calculator</h3>
+                        <p>A custom margin tool for procurement automation.</p>
+                        <span class="accent">View Details</span>
+                    </div>
+                    <div style="background: #2a2a3a; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-calculator" style="font-size: 4rem; opacity: 0.2;"></i>
+                    </div>
+                </div>
+                <div class="portfolio-card web">
+                    <div class="portfolio-overlay">
+                        <h3>KPI Bowling Chart</h3>
+                        <p>Interactive tracking dashboard for organizational metrics.</p>
+                        <span class="accent">View Details</span>
+                    </div>
+                    <div style="background: #2a2a3a; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-chart-bar" style="font-size: 4rem; opacity: 0.2;"></i>
+                    </div>
+                </div>
+                <div class="portfolio-card automation">
+                    <div class="portfolio-overlay">
+                        <h3>Lead Gen Engine</h3>
+                        <p>Passive lead generation system for local contractors.</p>
+                        <span class="accent">View Details</span>
+                    </div>
+                    <div style="background: #2a2a3a; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-bolt" style="font-size: 4rem; opacity: 0.2;"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <p>I grew up in New Jersey with my parents and four siblings; three sisters and one brother. In 2013, I relocated to metro Atlanta.
-    </p>
-   <p> I am currently employeed by General Electric. I am currently working towards the completion of a coding bootcamp at Georgia Tech, my goal is to enhance my skillsets and learn new skills that can open the doors to more opportunites in my career. So far, even in this short time, I have learned so much and cannot wait to keep learning more!
-   </p> 
-       <p> Living in a digital age, it is exciting to be part of a workforce that is looking to digitize, automate, and simplify business processes. I cannot image a world without the developers who are transforming the way we work.
-    </p>
-        <p>I am looking forward to my personal contribution in transforming the way we live, work, and play.
-    </p>
-     
-</section>
-</div>
+        <section id="experience">
+            <h2>Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4 class="accent">2024 — Present</h4>
+                    <h3>Senior Product Manager</h3>
+                    <p style="color: var(--text-muted);">GE Vernova | Procurement Division</p>
+                    <p>Leading digital transformation and network optimization projects.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="accent">2022 — 2024</h4>
+                    <h3>Automation Architect</h3>
+                    <p style="color: var(--text-muted);">Independent Projects</p>
+                    <p>Developed low-code ecosystems for logistics and supply chain firms.</p>
+                </div>
+            </div>
+        </section>
 
-<section class= "sidebar">
-    <div id="connect">
-        <h2>Connect with Me</h2>
-         <li><a href="https://github.com/GiovanniLeonardo/" target="_blank"><img src="./assets/images/github-600.png" alt="GitHub"></a></li>
-		 <li><a href="https://linkedin.com/in/giovannileonardo/" target="_blank"><img src="./assets/images/linkedin.png" alt="LinkedIn"></a></li>
-		 <li><a href="https://twitter.com/gio360" target="_blank"><img src="./assets/images/twitter.png" alt="Twitter"></a></li>
-     </div>  
-</section>
+        <section id="contact">
+            <h2>Contact</h2>
+            <div class="service-card" style="max-width: 600px;">
+                <p style="margin-bottom: 20px;">Ready to automate your workflow or discuss a new project? Let's connect.</p>
+                <form>
+                    <input type="text" placeholder="Name" style="width: 100%; padding: 15px; margin-bottom: 15px; background: #0b0b13; border: 1px solid var(--glass-border); color: white; border-radius: 8px;">
+                    <textarea placeholder="Message" rows="5" style="width: 100%; padding: 15px; margin-bottom: 15px; background: #0b0b13; border: 1px solid var(--glass-border); color: white; border-radius: 8px;"></textarea>
+                    <button type="submit" style="background: var(--accent); color: white; border: none; padding: 15px 40px; border-radius: 30px; cursor: pointer; font-weight: 600;">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
 
+    <script>
+        // Portfolio Filtering Logic
+        function filterSelection(c) {
+            var x, i;
+            x = document.getElementsByClassName("portfolio-card");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+                if (x[i].className.indexOf(c) > -1) x[i].style.display = "block";
+            }
+            
+            // Update Active Button
+            var btns = document.getElementsByClassName("filter-btn");
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].classList.remove("active");
+            }
+            event.currentTarget.classList.add("active");
+        }
 
-<footer>
-    <div class="container">
-        &copy; Copyright 2020 Leonardo LLC.
-    </div>
-</footer>
-    
+        // Active Link Highlighting on Scroll
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
